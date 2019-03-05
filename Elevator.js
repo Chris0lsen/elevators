@@ -4,40 +4,59 @@ class Elevator {
   maintenance = false // Whether the elevator is in maintenance mode
   target = 1 // What floor this elevator is currently going to
   doorOpen = true // Whether the doors are open
+  occupied = false // Whether there are occupants inside
+  floorsPassed = 0 // How many floors the elevator has passed in its trips
   constructor () {
 
   }
-  getTrips () {
+  get trips () {
     return this.trips
   }
-  setTrips (trips) {
+  set trips (trips) {
     this.trips = trips
   }
-  getFloor () {
+  get floor () {
     return this.floor
   }
-  setFloor (floor) {
+  set floor (floor) {
     this.floor = floor
   }
-  getMaintenance () {
+  get maintenance () {
     return this.maintenance
   }
-  setMaintenance (maintenance) {
+  set maintenance (maintenance) {
     this.maintenance = maintenance
   }
-  getTarget () {
+  get target () {
     return this.target
   }
-  setTarget (target) {
+  set target (target) {
     this.target = target
   }
+  get doorOpen () {
+    return this.doorOpen
+  }
+  set doorOpen (doorOpen) {
+    this.doorOpen = doorOpen
+  }
+  get occupied () {
+    return this.occupied
+  }
+  set occupied (occupied) {
+    this.occupied = occupied
+  }
+  get floorsPassed () {
+    return this.floorsPassed
+  }
+  set floorsPassed (floorsPassed) {
+    this.floorsPassed = floorsPassed
+  }
   answerCall (target) {
-    const newTripCount = this.getTrips()++
     // Increment the trip counter
-    this.setTrips(newTripCount)
-    this.setTarget(target)
-    if (newTripCount >= 100) {
-      this.setMaintenance(true)
+    this.trips++
+    this.target = target
+    if (this.trips >= 100) {
+      this.maintenance = true
     }
   }
   move () {

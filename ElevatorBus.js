@@ -9,7 +9,14 @@ class ElevatorBus {
     this.floors = floors
   }
   request (floor) {
-
+    if (this.isValidRequest()) {
+      
+    } else {
+      throw new Error(`Invalid request received: Cannot dispatch to ${floor}; Top floor is ${this.floors}`) 
+    }
+  }
+  isValidRequest (floor) {
+    return floor <= this.floors
   }
   /*
    * In order to simulate the passage of time,
@@ -22,4 +29,5 @@ class ElevatorBus {
       elevator.move()
     }
   }
+
 }
