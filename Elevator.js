@@ -1,13 +1,13 @@
 class Elevator {
-  trips = 0 // Number of trips this elevator has taken
-  floor = 1 // Which floor this elevator is currently on
-  maintenance = false // Whether the elevator is in maintenance mode
-  target = 1 // What floor this elevator is currently going to
-  doorOpen = true // Whether the doors are open
-  occupied = false // Whether there are occupants inside
-  floorsPassed = 0 // How many floors the elevator has passed in its trips
   constructor () {
-
+    this.trips = 0 // Number of trips this elevator has taken
+    this.floor = 1 // Which floor this elevator is currently on
+    this.maintenance = false // Whether the elevator is in maintenance mode
+    this.target = 1 // What floor this elevator is currently going to
+    this.doorOpen = true // Whether the doors are open
+    this.occupied = false // Whether there are occupants inside
+    this.floorsPassed = 0 // How many floors the elevator has passed in its trips
+    this.direction = null // Whether the elevator is going up or down
   }
   get trips () {
     return this.trips
@@ -50,6 +50,9 @@ class Elevator {
   }
   set floorsPassed (floorsPassed) {
     this.floorsPassed = floorsPassed
+  }
+  get direction () {
+    return this.target > this.floor ? 1 : -1
   }
   answerCall (target) {
     // Increment the trip counter
