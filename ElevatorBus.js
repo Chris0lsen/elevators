@@ -1,18 +1,4 @@
 class ElevatorBus {
-  /*
-   * Initialize the store, similar to flux
-   */
-  //requests = [] // FIFO queue for elevator requests
-  //floorStatus = {} // Keep track of direction of elevators at all floors
-  //elevators = [] // All instantiated elevator objects
-  /**
-   * 1: [Elevators]
-   *    
-   *   
-   *
-   *
-   *
-   */
   constructor (elevators, floors) {
     this.floors = floors
     this.elevators = Array(elevators).fill(new Elevator()) // Fill elevators array with new elevator objects
@@ -30,7 +16,7 @@ class ElevatorBus {
     }
   }
   isValidRequest (floor) {
-    return floor <= this.floors
+    return floor <= this.floors && floor > 0
   }
 
   /*
@@ -38,21 +24,28 @@ class ElevatorBus {
    * to find the next unoccupied elevator
    */
   findNearestElevator (floor) {
+    let nearestElevator = this.peek(floor, null) // peek at the current floor
     // Breadth-first one floor at a time
     for (let i = 1; i <= (this.floors / 2); i++) {
-      let nearestElevator = this.peek(floor - i, 1) // peek down
-      if (!nearestElevator) nearestElevator = peek(floor + i, -1) // peek up
+      nearestElevator = this.peek(floor - i, 1) // peek down
+      if (!nearestElevator) nearestElevator = this.peek(floor + i, -1) // peek up
       nearestElevator.answerCall(floor)
     }
   }
-
+  /*
+   * Check the floorStatus store for elevators at the given floor
+   * Direction will be 1 if we're looking below the target floor,
+   *  -1 if we're looking above the target floor,
+   *  and null if we're checking the current floor
+   */
   peek (floor, direction) {
     // If there are any elevators at the current floor...
     if (this.floorStatus[floor]) {
       // Look for unoccupied elevators going towards the requested floor
       for (let elevator of this.floorStatus) {
-        if (!elevator.occupied 
-            && elevator.direction === direction
+        if ((!elevator.occupied 
+            || (elevator.direction === direction 
+                || !elevator.direction))
             && !elevator.maintenance) {
           return elevator
         }
