@@ -60,8 +60,17 @@ class ElevatorBus {
    * positions accordingly
    */
   tick() {
-    for (let elevator of this.elevators) {
-      elevator.move()
+    for (let floor of this.floorStatus) {
+      for (let elevator in floor) {
+        if (elevator.direction) {
+          if (elevator.direction === 1) {
+            floor[elevator++].push(floor[elevator])
+          } else {
+            floor[elevator++].push(floor[elevator])
+          }
+          floor.splice(elevator, 1)
+        }
+      }
     }
   }
 
