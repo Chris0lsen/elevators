@@ -1,4 +1,11 @@
+/*
+ * Store to keep track of individual elevator movements
+ */
 class ElevatorBus {
+  /*
+   * Initialize elevators and floors, and create an object store
+   * for tracking current floor of each elevator
+   */
   constructor (elevators, floors) {
     this.floors = floors
     this.elevators = Array(elevators).fill(new Elevator()) // Fill elevators array with new elevator objects
@@ -6,6 +13,10 @@ class ElevatorBus {
       1: this.elevators
     }
   }
+
+  /*
+   * Accept an incoming request, and assign it to an elevator
+   */
   request (floor) {
     if (this.isValidRequest()) {
       // Start looking up and down from this floor and find the closest unoccupied elevator
@@ -15,6 +26,10 @@ class ElevatorBus {
       throw new Error(`Invalid request received: Cannot dispatch to ${floor}; Top floor is ${this.floors}`) 
     }
   }
+
+  /*
+   * Verify that the requested floor is valid
+   */
   isValidRequest (floor) {
     return floor <= this.floors && floor > 0
   }
@@ -31,6 +46,7 @@ class ElevatorBus {
       if (!nearestElevator) nearestElevator = this.peek(floor + i, -1) // peek up
       nearestElevator.answerCall(floor)
     }
+  
   }
   /*
    * Check the floorStatus store for elevators at the given floor
@@ -53,6 +69,7 @@ class ElevatorBus {
       return false
     }
   }
+
   /*
    * In order to simulate the passage of time,
    * the tick() method will "move" all existing
@@ -62,16 +79,18 @@ class ElevatorBus {
   tick() {
     for (let floor of this.floorStatus) {
       for (let elevator in floor) {
-        if (elevator.direction) {
-          if (elevator.direction === 1) {
-            floor[elevator++].push(floor[elevator])
+        let currentElevator = floor[elevator]
+        if (currentElevator.direction) {
+          if (currentElevator.direction === 1) {
+            floor[elevator++].push(currentElevator)
+            currentElevator.move()
           } else {
-            floor[elevator++].push(floor[elevator])
+            floor[elevator--].push(currentElevator)
+            currentElevator.move()
           }
           floor.splice(elevator, 1)
         }
       }
     }
   }
-
 }

@@ -7,67 +7,21 @@ class Elevator {
     this.doorOpen = true // Whether the doors are open
     this.occupied = false // Whether there are occupants inside
     this.floorsPassed = 0 // How many floors the elevator has passed in its trips
-    this.direction = null // Whether the elevator is going up or down
+    this.direction = null // Whether the elevator is going up (1),down (-1), or stationary (null)
   }
-  get trips () {
-    return this.trips
-  }
-  set trips (trips) {
-    this.trips = trips
-  }
-  get floor () {
-    return this.floor
-  }
-  set floor (floor) {
-    this.floor = floor
-  }
-  get maintenance () {
-    return this.maintenance
-  }
-  set maintenance (maintenance) {
-    this.maintenance = maintenance
-  }
-  get target () {
-    return this.target
-  }
-  get doorOpen () {
-    return this.doorOpen
-  }
-  set doorOpen (doorOpen) {
-    this.doorOpen = doorOpen
-  }
-  get occupied () {
-    return this.occupied
-  }
-  set occupied (occupied) {
-    this.occupied = occupied
-  }
-  get floorsPassed () {
-    return this.floorsPassed
-  }
-  set floorsPassed (floorsPassed) {
-    this.floorsPassed = floorsPassed
-  }
-  /* Returns 1 if the elevator is going up and -1 if it's going down, and null if it has no target*/
-  get direction () {
-    return this.direction
-    /*
-    if (this.target) {
-      if (this.target[0] > this.floor) {
-        return 1
-      } else {
-        return -1
-      }
-    } else {
-      return null
-    }
-    */
-  }
+
+  /*
+   * Assign the target floor to this elevator.
+   * Add the floor to the stack of floors we're going to,
+   * and re-sort the target array, reversing it if we're
+   * going down
+   */
   answerCall (target) {
     // Increment the trip counter
     this.trips++
-    this.target.push(target).sort()
+      this.target.push(target).sort()
     if (target < this.floor) {
+      this.target.push(target).reverse()
       this.direction = -1  
     } else {
       this.direction = 1
@@ -76,15 +30,30 @@ class Elevator {
       this.maintenance = true
     }
   }
+
+  /*
+   * Update elevator stats upon moving a floor.
+   */
   move () {
     if (this.target) {
-      if (this.target[0] < this.floor) {
-  
+      if (this.target[0] > this.floor) {
+        this.direction = 1 
+        this.floorsPassed++
+      } else  if (this.target[0] < this.floor) {
+        this.direction = -1
+        this.floorsPassed++
       } else {
-
+        this.target.unshift()
+        if (this.target.length === 0) {
+          this.finishTrip()
+        }
       }
     }
   }
+
+  /*
+   * Conclude a trip by setting occupancy, door and target status
+   */
   finishTrip () {
     this.setOccupied = false
     this.doorOpen = true
