@@ -63,6 +63,16 @@ class Elevator {
     }
   }
   move () {
-    
+    if (this.target) {
+      if (this.target < this.floor) {
+  
+      } else {
+
+      }
+    }
+  }
+  finishTrip () {
+    this.setOccupied = false
+    this.doorOpen = true
   }
 }

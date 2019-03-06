@@ -38,8 +38,26 @@ class ElevatorBus {
    * to find the next unoccupied elevator
    */
   findNearestElevator (floor) {
-    for (let i = 1; i < (this.floors / 2); i++) {
-      
+    // Breadth-first one floor at a time
+    for (let i = 1; i <= (this.floors / 2); i++) {
+      let nearestElevator = this.peek(floor - i, 1) // peek down
+      if (!nearestElevator) nearestElevator = peek(floor + i, -1) // peek up
+      nearestElevator.answerCall(floor)
+    }
+  }
+
+  peek (floor, direction) {
+    // If there are any elevators at the current floor...
+    if (this.floorStatus[floor]) {
+      // Look for unoccupied elevators going towards the requested floor
+      for (let elevator of this.floorStatus) {
+        if (!elevator.occupied 
+            && elevator.direction === direction
+            && !elevator.maintenance) {
+          return elevator
+        }
+      }
+      return false
     }
   }
   /*
